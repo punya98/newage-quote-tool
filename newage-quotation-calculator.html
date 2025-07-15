@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>NewAge Quotation Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #999; padding: 8px; text-align: center; }
+    th { background-color: #24364e; color: #fff; }
+    .btn { padding: 10px 15px; background-color: #24364e; color: white; border: none; margin-top: 20px; cursor: pointer; }
+    input[type="number"] { width: 60px; }
+  </style>
+</head>
+<body>
+
+<h2>NewAge Fire Products Quotation Calculator</h2>
+<table>
+  <thead>
+    <tr>
+      <th>S.No</th>
+      <th>Description</th>
+      <th>Size</th>
+      <th>Unit</th>
+      <th>Rate (₹)</th>
+      <th>Qty</th>
+      <th>Amount (₹)</th>
+    </tr>
+  </thead>
+  <tbody id="product-table"></tbody>
+</table>
+
+<p><strong>Subtotal (18% GST): ₹<span id="gst18-subtotal">0.00</span></strong></p>
+<p><strong>Subtotal (12% GST on RRL & Sprinklers): ₹<span id="gst12-subtotal">0.00</span></strong></p>
+<p><strong>Total GST: ₹<span id="gst-total">0.00</span></strong></p>
+<p><strong>Grand Total: ₹<span id="grand-total">0.00</span></strong></p>
+
+<button class="btn" onclick="downloadPDF()">Download Quotation as PDF</button>
+<button class="btn" onclick="sendWhatsApp()">Send via WhatsApp</button>
+
+<script>
+const products = [
+  { sno: 1, desc: '"NEWAGE" SS SINGLE HYDRANT VALVE', size: '63MM', unit: 'PCS', rate: 4350, gst: 18 },
+  { sno: 2, desc: '"NEWAGE" SS SHORT BRANCH PIPE', size: '63MM', unit: 'PCS', rate: 1400, gst: 18 },
+  { sno: 3, desc: '"PREMIER" RRL FIRE HOSE 15 MTRS LONG WITH SS COUP.', size: '', unit: 'PCS', rate: 3400, gst: 12 },
+  { sno: 4, desc: '"NEWAGE" GM SINGLE HYDRANT VALVE', size: '63MM', unit: 'PCS', rate: 7101, gst: 18 },
+  { sno: 5, desc: '"NEWAGE" GM SHORT BRANCH PIPE', size: '', unit: 'PCS', rate: 2128, gst: 18 },
+  { sno: 6, desc: '"NEWAGE" FIRE MAN'S AXE 20000 VOLT', size: '', unit: 'PCS', rate: 1039, gst: 18 },
+  { sno: 7, desc: '"PREMIER" RRL FIRE HOSE 15 MTRS LONG WITH GM COUP.', size: '', unit: 'PCS', rate: 4480, gst: 12 },
+  { sno: 8, desc: '"NEWAGE" SWING TYPE FIRE HOSE REEL 30 MTRS WITH DRUM', size: '', unit: 'PCS', rate: 5606, gst: 18 },
+  { sno: 9, desc: '"NEWAGE" 2 WAY FIRE BRIGADE CONNECTION', size: '', unit: 'PCS', rate: 5320, gst: 18 },
+  { sno: 10, desc: '"NEWAGE" 4 WAY FIRE BRIGADE CONNECTION', size: '', unit: 'PCS', rate: 7560, gst: 18 },
+  { sno: 11, desc: '"NEWAGE" DRAWOUT CONNECTION', size: '', unit: 'PCS', rate: 6552, gst: 18 },
+  { sno: 12, desc: '"NEWAGE" UNBRAIDED FLEXIBLE HOSE 700MM UL', size: '', unit: 'PCS', rate: 493, gst: 18 },
+  { sno: 13, desc: '"NEWAGE" UNBRAIDED FLEXIBLE HOSE 1000MM UL', size: '', unit: 'PCS', rate: 526, gst: 18 },
+  { sno: 14, desc: '"NEWAGE" UNBRAIDED FLEXIBLE HOSE 1200MM UL', size: '', unit: 'PCS', rate: 569, gst: 18 },
+  { sno: 15, desc: '"NEWAGE" UNBRAIDED FLEXIBLE HOSE 1500MM UL', size: '', unit: 'PCS', rate: 622, gst: 18 },
+  { sno: 16, desc: '"NEWAGE" PENDENT SPRINKLER', size: '', unit: 'PCS', rate: 152, gst: 12 },
+  { sno: 17, desc: '"NEWAGE" UPRIGHT SPRINKLER', size: '', unit: 'PCS', rate: 152, gst: 12 },
+  { sno: 18, desc: '"NEWAGE" SIDEWALL SPRINKLER', size: '', unit: 'PCS', rate: 165, gst: 12 }
+];
+
+function renderTable() {
+  const tbody = document.getElementById('product-table');
+  tbody.innerHTML = products.map(p => `
+    <tr>
+      <td>${p.sno}</td>
+      <td>${p.desc}</td>
+      <td>${p.size}</td>
+      <td>${p.unit}</td>
+      <td>₹${p.rate.toFixed(2)}</td>
+      <td><input type="number" min="0" value="0" data-rate="${p.rate}" data-gst="${p.gst}" onchange="calculateTotals()" /></td>
+      <td class="amount">₹0.00</td>
+    </tr>
+  `).join('');
+}
+
+function calculateTotals() {
+  let gst18Total = 0;
+  let gst12Total = 0;
+
+  document.querySelectorAll('#product-table tr').forEach(row => {
+    const input = row.querySelector('input');
+    const qty = parseInt(input.value) || 0;
+    const rate = parseFloat(input.dataset.rate);
+    const gst = parseInt(input.dataset.gst);
+    const amount = qty * rate;
+
+    if (gst === 18) gst18Total += amount;
+    else gst12Total += amount;
+
+    row.querySelector('.amount').textContent = '₹' + amount.toFixed(2);
+  });
+
+  const gst18 = gst18Total * 0.18;
+  const gst12 = gst12Total * 0.12;
+  const totalGST = gst18 + gst12;
+  const grandTotal = gst18Total + gst12Total + totalGST;
+
+  document.getElementById('gst18-subtotal').textContent = gst18Total.toFixed(2);
+  document.getElementById('gst12-subtotal').textContent = gst12Total.toFixed(2);
+  document.getElementById('gst-total').textContent = totalGST.toFixed(2);
+  document.getElementById('grand-total').textContent = grandTotal.toFixed(2);
+}
+
+function downloadPDF() {
+  alert("To enable PDF download, use jsPDF or html2pdf in deployment.");
+}
+
+function sendWhatsApp() {
+  let message = "Quotation Request:\n";
+  document.querySelectorAll('#product-table tr').forEach(row => {
+    const desc = row.cells[1].innerText;
+    const qty = row.querySelector('input').value;
+    if (parseInt(qty) > 0) {
+      message += `• ${desc} - Qty: ${qty}\n`;
+    }
+  });
+  message += `\nGrand Total: ₹${document.getElementById('grand-total').textContent}`;
+  const phone = "9999889008";
+  const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+  window.open(url, "_blank");
+}
+
+renderTable();
+</script>
+
+</body>
+</html>
