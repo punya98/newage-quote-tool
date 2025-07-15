@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NewAge Quotation Calculator</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    h1, p { text-align: center; color: #24364e; margin: 5px 0; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    th { background-color: #24364e; color: #fff; }
+    tfoot td { font-weight: bold; }
+    input[type="number"] { width: 60px; }
+    .btn { margin: 10px 5px; padding: 10px 20px; background: #24364e; color: white; border: none; cursor: pointer; border-radius: 4px; }
+  </style>
+  <!-- jsPDF and AutoTable -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.5.25/dist/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+  <h1>NEWAGE FIRE FIGHTING RATES</h1>
+  <p>Vijay Sales Corporation | sales@vijaysalescorp.com | 9999889008</p>
+  <p>(Rates are in INR)</p>
+
+  <table id="quote-table">
+    <thead>
+      <tr>
+        <th>S.No</th>
+        <th>Description</th>
+        <th>Size</th>
+        <th>Rate</th>
+        <th>Qty</th>
+        <th>Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>1</td><td>"NEWAGE" SS SINGLE HYDRANT VALVE</td><td>63MM</td><td data-rate="4350" data-gst="18">4350</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>2</td><td>"NEWAGE" SS SHORT BRANCH PIPE</td><td>63MM</td><td data-rate="1400" data-gst="18">1400</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>3</td><td>"PREMIER" RRL FIRE HOSE 15 MTRS LONG WITH SS COUP.</td><td>-</td><td data-rate="3400" data-gst="12">3400</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>4</td><td>"NEWAGE" GM SINGLE HYDRANT VALVE</td><td>63MM</td><td data-rate="7101" data-gst="18">7101</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>5</td><td>"NEWAGE" GM SHORT BRANCH PIPE</td><td>-</td><td data-rate="2128" data-gst="18">2128</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>6</td><td>"NEWAGE" FIRE MAN'S AXE 20000 VOLT</td><td>-</td><td data-rate="1039" data-gst="18">1039</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>7</td><td>"PREMIER" RRL FIRE HOSE 15 MTRS LONG WITH GM COUP.</td><td>-</td><td data-rate="4480" data-gst="12">4480</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>8</td><td>"NEWAGE" SWING TYPE FIRE HOSE REEL 30 MTRS WITH DRUM</td><td>-</td><td data-rate="5606" data-gst="18">5606</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>9</td><td>"NEWAGE" 2 WAY FIRE BRIGADE CONNECTION</td><td>-</td><td data-rate="5320" data-gst="18">5320</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>10</td><td>"NEWAGE" 4 WAY FIRE BRIGADE CONNECTION</td><td>-</td><td data-rate="7560" data-gst="18">7560</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>11</td><td>"NEWAGE" DRAWOUT CONNECTION</td><td>-</td><td data-rate="6552" data-gst="18">6552</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>12</td><td>"NEWAGE" UNBRAIDED FLEXIBLE HOSE 700MM LONG UL LISTED</td><td>-</td><td data-rate="493" data-gst="18">493</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>13</td><td>"NEWAGE" UNBRAIDED FLEXIBLE HOSE 1000MM LONG UL LISTED</td><td>-</td><td data-rate="526" data-gst="18">526</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>14</td><td>"NEWAGE" UNBRAIDED FLEXIBLE HOSE 1200MM LONG UL LISTED</td><td>-</td><td data-rate="569" data-gst="18">569</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>15</td><td>"NEWAGE" UNBRAIDED FLEXIBLE HOSE 1500MM LONG UL LISTED</td><td>-</td><td data-rate="622" data-gst="18">622</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>16</td><td>"NEWAGE" PENDENT SPRINKLER</td><td>-</td><td data-rate="152" data-gst="12">152</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>17</td><td>"NEWAGE" UPRIGHT SPRINKLER</td><td>-</td><td data-rate="152" data-gst="12">152</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+      <tr><td>18</td><td>"NEWAGE" SIDEWALL SPRINKLER</td><td>-</td><td data-rate="165" data-gst="12">165</td><td><input type="number" min="0" value="0" onchange="calculateTotals()"></td><td class="amount">0.00</td></tr>
+    </tbody>
+    <tfoot>
+      <tr><td colspan="5">Subtotal (18% GST)</td><td id="subtotal18">0.00</td></tr>
+      <tr><td colspan="5">Subtotal (12% GST on RRL & Sprinklers)</td><td id="subtotal12">0.00</td></tr>
+      <tr><td colspan="5">Total GST</td><td id="totalGST">0.00</td></tr>
+      <tr><td colspan="5">Grand Total</td><td id="grandTotal">0.00</td></tr>
+    </tfoot>
+  </table>
+
+  <button class="btn" onclick="calculateTotals()">Calculate</button>
+  <button class="btn" onclick="generatePDF()">Download as PDF</button>
+  <button class="btn" onclick="sendWhatsApp()">Send via WhatsApp</button>
+
+  <script>
+    function calculateTotals() {
+      let sub18 = 0, sub12 = 0;
+      document.querySelectorAll('#quote-table tbody tr').forEach(row => {
+        const rate = parseFloat(row.querySelector('td[data-rate]').getAttribute('data-rate'));
+        const gst = parseInt(row.querySelector('td[data-rate]').getAttribute('data-gst'), 10);
+        const qty = parseInt(row.querySelector('input').value, 10) || 0;
+        const amount = rate * qty;
+        row.querySelector('.amount').innerText = amount.toFixed(2);
+        if (gst === 18) sub18 += amount;
+        else sub12 += amount;
+      });
+      const gst18 = sub18 * 0.18;
+      const gst12 = sub12 * 0.12;
+      const totalGST = gst18 + gst12;
+      const grandTotal = sub18 + sub12 + totalGST;
+
+      document.getElementById('subtotal18').innerText = sub18.toFixed(2);
+      document.getElementById('subtotal12').innerText = sub12.toFixed(2);
+      document.getElementById('totalGST').innerText = totalGST.toFixed(2);
+      document.getElementById('grandTotal').innerText = grandTotal.toFixed(2);
+    }
+
+    function generatePDF() {
+      calculateTotals();
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFontSize(14);
+      doc.text('NEWAGE FIRE FIGHTING RATES', 14, 16);
+      doc.setFontSize(12);
+      doc.text('Vijay Sales Corporation | sales@vijaysalescorp.com | 9999889008', 14, 24);
+      doc.autoTable({
+        startY: 30,
+        head: [['S.No', 'Description', 'Size', 'Rate', 'Qty', 'Amount']],
+        body: Array.from(document.querySelectorAll('#quote-table tbody tr')).map((row, idx) => {
+          const qty = parseInt(row.querySelector('input').value, 10);
+          if (!qty) return null;
+          const cells = row.querySelectorAll('td');
+          return [
+            idx + 1,
+            cells[1].innerText,
+            cells[2].innerText,
+            cells[3].getAttribute('data-rate'),
+            qty,
+            cells[5].innerText
+          ];
+        }).filter(Boolean)
+      });
+      const finalY = doc.lastAutoTable.finalY + 10;
+      doc.text(`Subtotal (18%): ${document.getElementById('subtotal18').innerText}`, 14, finalY);
+      doc.text(`Subtotal (12%): ${document.getElementById('subtotal12').innerText}`, 14, finalY + 6);
+      doc.text(`GST Total: ${document.getElementById('totalGST').innerText}`, 14, finalY + 12);
+      doc.text(`Grand Total: ${document.getElementById('grandTotal').innerText}`, 14, finalY + 18);
+      doc.save('NewAge-Quotation.pdf');
+    }
+
+    function sendWhatsApp() {
+      calculateTotals();
+      let msg = 'Quotation Request:\n';
+      document.querySelectorAll('#quote-table tbody tr').forEach((row) => {
+        const qty = parseInt(row.querySelector('input').value, 10);
+        if (qty) msg += `• ${row.cells[1].innerText} x ${qty}\n`;
+      });
+      msg += `\nGrand Total: ${document.getElementById('grandTotal').innerText}`;
+      const url = `https://wa.me/9199999889008?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+  </script>
+</body>
+</html>
